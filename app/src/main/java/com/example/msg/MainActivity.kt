@@ -86,6 +86,10 @@ class MainActivity : AppCompatActivity() {
         ref.putFile(selectedPhotoUri!!)
             .addOnSuccessListener {
                 Log.d("Main","Succesfully upload image:${it.metadata?.path}")
+
+                ref.downloadUrl.addOnSuccessListener {
+                    Log.d("MainActivity","File Location: $it")
+                }
             }
     }
 }
