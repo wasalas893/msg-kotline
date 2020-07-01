@@ -22,6 +22,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        supportActionBar?.title="User Register"
+
         selectphoto_button_register.setOnClickListener {
             Log.d("Main","Try to the show photo selected")
             val intent=Intent(Intent.ACTION_PICK)
@@ -115,4 +117,6 @@ class MainActivity : AppCompatActivity() {
             }
     }
 }
-class User(val uid:String,val username:String,val profileImageUrl:String)
+class User(val uid:String,val username:String,val profileImageUrl:String){
+    constructor():this("","","")
+}
