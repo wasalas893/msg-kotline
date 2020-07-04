@@ -44,7 +44,7 @@ class NewMessageActivity : AppCompatActivity() {
                 val adapter=GroupAdapter<ViewHolder>()
 
 
-                snapshot.children.forEach {
+                snapshot.children.forEach() {
                     Log.d("NewMessage",it.toString())
                     val user=it.getValue(User::class.java)
                     if(user !=null){

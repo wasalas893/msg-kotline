@@ -1,5 +1,6 @@
 package com.example.msg
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.google.firebase.auth.FirebaseAuth
@@ -18,6 +19,13 @@ class LoginActivity : AppCompatActivity() {
             val password=password_edit_login.text.toString()
             //firebase
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email,password)
+                .addOnSuccessListener {
+
+
+                    val intent= Intent(this,LatesMessagesActivity::class.java)
+                    intent.flags= Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+                }
 
 
         }
