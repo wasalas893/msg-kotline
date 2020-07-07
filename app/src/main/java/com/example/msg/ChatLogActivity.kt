@@ -35,7 +35,7 @@ class ChatLogActivity : AppCompatActivity() {
         //setupDummyData()
         listenForMessages()
         send_button_chat_log.setOnClickListener {
-            Log.d(TAG,"Attemps to send messages......")
+            Log.d(TAG," send messages......")
             performSendMessage()
         }
     }
