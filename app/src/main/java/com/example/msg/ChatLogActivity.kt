@@ -99,10 +99,15 @@ class ChatLogActivity : AppCompatActivity() {
             .addOnSuccessListener {
                 Log.d(TAG,"seved our chat messages:${reference.key}")
                 edittext_chat_log.text.clear()
-                recyclerview_chat_log.scrollToPosition(adapter.itemCount-1)
+                recyclerview_chat_log.scrollToPosition(adapter.itemCount -1)
             }
 
         toReference.setValue(chatMessage)
+        //letestmessage
+        val latestMessageRef=FirebaseDatabase.getInstance().getReference("/latest-messages/$fromId/$toId")
+        latestMessageRef.setValue(chatMessage)
+        val latestMessageToRef=FirebaseDatabase.getInstance().getReference("/latest-messages/$toId/$fromId")
+        latestMessageRef.setValue(chatMessage)
 
     }
 
