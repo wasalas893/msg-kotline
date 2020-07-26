@@ -5,8 +5,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
@@ -16,6 +18,7 @@ import kotlinx.android.synthetic.main.lates_message_row.view.*
 class LatesMessagesActivity : AppCompatActivity() {
     companion object{
         var currentUser:User?=null
+        val TAG="LatesMessagesActivity"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,7 +26,19 @@ class LatesMessagesActivity : AppCompatActivity() {
         setContentView(R.layout.activity_lates_messages)
 
         recycleview_lates_messages.adapter=adapter
+
+        recycleview_lates_messages.addItemDecoration(DividerItemDecoration(this,
+        DividerItemDecoration.VERTICAL))
+
         //setupDummyRows()
+        adapter.setOnItemClickListener { item, view ->
+         var intent=Intent(this,ChatLogActivity::class.java)
+            val row=item as LatestMessageRow
+            intent.putExtra(NewMessageActivity.USER_KEY,row.chatPartnerUser)
+            startActivity(intent)
+        }
+
+
        listenForLatestMessages()
 
          fetchCurrentUser()
@@ -39,8 +54,32 @@ class LatesMessagesActivity : AppCompatActivity() {
 
     }
     class LatestMessageRow(val chatMessage:ChatLogActivity.ChatMessage):Item<ViewHolder>(){
+        var chatPartnerUser:User?=null
         override fun bind(viewHolder: ViewHolder, position: Int) {
             viewHolder.itemView.textmessage_latet_message.text=chatMessage.text
+
+            val chatPartnerId:String
+            if(chatMessage.fromId==FirebaseAuth.getInstance().uid){
+
+                chatPartnerId=chatMessage.toId
+
+            }else{
+                chatPartnerId=chatMessage.fromId
+            }
+            val ref=FirebaseDatabase.getInstance().getReference("/users/$chatPartnerId")
+            ref.addListenerForSingleValueEvent(object :ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    chatPartnerUser=snapshot.getValue(User::class.java)
+                    viewHolder.itemView.username_latest_message.text=chatPartnerUser?.username
+                    val targetImageView=viewHolder.itemView.imageView_latest_message
+                    Picasso.get().load(chatPartnerUser?.profileImageUrl).into(targetImageView)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+            })
+
 
         }
         override fun getLayout(): Int {
@@ -104,6 +143,7 @@ class LatesMessagesActivity : AppCompatActivity() {
         ref.addListenerForSingleValueEvent(object:ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
              currentUser=snapshot.getValue(User::class.java)
+
             }
 
             override fun onCancelled(error: DatabaseError) {

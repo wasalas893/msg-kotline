@@ -13,6 +13,7 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.activity_chat_log.*
+import kotlinx.android.synthetic.main.activity_lates_messages.*
 import kotlinx.android.synthetic.main.chat_from_row.view.*
 import kotlinx.android.synthetic.main.chat_to_row.view.*
 
@@ -57,6 +58,7 @@ class ChatLogActivity : AppCompatActivity() {
                        adapter.add(ChatToItem(chatMessage.text,toUser!!))
                    }
                }
+                recyclerview_chat_log.scrollToPosition(adapter.itemCount-1)
             }
 
             override fun onCancelled(error: DatabaseError) {
